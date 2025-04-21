@@ -33,12 +33,14 @@ const readlineSync = require('readline-sync');
 let animals = [];
 let fees = [];
 function addAnimal(name, fee) {
-    if (!name || fee < 0) {
+    if (!name || name.length <= 0 || fee < 0) {
         throw new Error("Invalid animal name or adoption fee!");
     }
     animals.push(name);
     fees.push(fee);
-}
+} 
+
+
 function getAdoptionFee(animalName) {
     let index = animals.indexOf(animalName);
     if (index === -1) {
@@ -49,6 +51,7 @@ function getAdoptionFee(animalName) {
 // Main program
 console.log("Welcome to the Pet Shelter System");
 while (true) {
+    try {
     let action = readlineSync.question("Choose an action: 'add', 'fee', or 'exit': ").toLowerCase();
     if (action === "exit") {
         console.log("Goodbye!");
@@ -58,15 +61,21 @@ while (true) {
         let animal = readlineSync.question("Enter the animal's name: ");
         let fee = Number(readlineSync.question("Enter the adoption fee: "));
         addAnimal(animal, fee);
+        if (fee < 0 || animal.length <= 0) {
+            console.log("Please enter a valid animal name or adoption fee.");
+        } else{
         console.log(`${animal} added with a fee of $${fee}.`);
+        }
     } else if (action === "fee") {
         let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
         console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
     } else {
         console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
     }
+}catch (err){
+    console.log(err.message);
 }
-
+}
 
 
 /*
